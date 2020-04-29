@@ -1,0 +1,25 @@
+win:
+   target: nsis
+   icon: build/ico/icon.ico
+appId: com.yue_lianddd_dfgf_czczc_chou_jiang.app
+asar: true
+directories:
+    output: "../dist"
+files:
+    - "**/*"
+    - "!src/**/*"
+    - "!build/ico/**/*"
+    - "!build/node_modules/**/*"
+    - "!config/**/*"
+    - "build/main.js"
+    - "!.npmrc"
+    - "!main.js"
+    - "!build.js"
+    - "!.eslintrc.json"
+    - "!dev-app-update.yml"
+    - "!.eslintignore"
+    - "!webpack.config.js"
+    - "!electron-builder.yml"
+    -
+        from: "../render/build/"
+        to: "./assets"

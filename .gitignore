@@ -1,0 +1,12 @@
+dist/
+main/node_modules/
+main/build/
+main/package-lock.json
+
+
+render/node_modules/
+render/build/
+render/public/manifest.json
+render/robots.txt
+render/yarn.lock
+render/.DS_Store
