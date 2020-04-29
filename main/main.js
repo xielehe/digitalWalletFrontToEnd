@@ -1,10 +1,7 @@
 import path from 'path'
 import { app, BrowserWindow, ipcMain } from 'electron'
 
-// import Config from '../config/default'
-const Config = {
-    mode: 'production'
-}
+import Config from '../config/default'
 let mainWindow
 
 app.commandLine.appendSwitch('ignore-certificate-errors')

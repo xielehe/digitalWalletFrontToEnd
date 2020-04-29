@@ -13,6 +13,7 @@
     "bignumber.js": "^9.0.0",
     "bip38": "^3.0.0",
     "bitcoinjs-lib": "^5.1.7",
+    "ethereumjs-tx": "^2.1.2",
     "moment": "^2.24.0",
     "notistack": "^0.9.7",
     "ramda": "^0.27.0",
@@ -24,9 +25,9 @@
     "wif": "^2.0.6"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "rescripts start",
+    "build": "rescripts build",
+    "test": "rescripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -43,5 +44,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@rescripts/cli": "^0.0.14",
+    "@rescripts/rescript-env": "^0.0.12"
   }
 }

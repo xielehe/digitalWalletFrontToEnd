@@ -17,6 +17,10 @@ import ImportAddress from "views/pages/eth/ImportAddress";
 import {
     useInit
 } from 'context/init'
+import {defaultTo} from 'ramda'
+
+import { EthereumPairs } from "constants.js"
+import Pannel from "views/pages/eth/SinglePanel"
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -37,26 +41,21 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const Store = window.require('electron-store')
+
 export default function CenteredGrid() {
     const [openkey, setOpenKey] = useState(false)
     const [pageLoading, setPageLoading] = useState(false)
-    const [{
-        addresses
-    }, setInit] = useInit()
+    const [eths, setEths] = useState(defaultTo([], (new Store()).get(EthereumPairs)))
     const classes = useStyles()
-    const importKey = () => setOpenKey(true)
-    const saveAddress = (addr, name) => {
-
-    }
-    const savePair = ({
-        name,
-        address,
-        encryptPrivateKey
-    }) => {
-
-    }
     const deleteAddress = addr => {
 
+    }
+    const refetch = () =>{
+        const store = new Store()
+        const ethAddress = defaultTo([], store.get(EthereumPairs))
+
+        console.log(ethAddress)
     }
 
     return ( <div className = {classes.root} >
@@ -65,12 +64,15 @@ export default function CenteredGrid() {
         </Backdrop>
         <Grid container spacing = {3} className = { classes.btn } >
         <Grid item xs = { 4 } > < Createpiar / > </Grid>
-        <Grid item xs = { 4 } > < ImportAddress / > </Grid>
+        <Grid item xs = { 4 } > < ImportAddress update={refetch} / > </Grid>
         <Grid item xs = { 4 } >
         <Button variant = "outlined" onClick = { console.log } size = 'large' disableFocusRipple fullWidth >
         import privatekey
         </Button>
         </Grid>
+        </Grid>
+        <Grid container spacing={3}>
+            {eths.map(ethereum => <Pannel setPageLoading={setPageLoading} ethereum={ethereum} />)}
         </Grid>
         </div>
     );

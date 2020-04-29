@@ -6,8 +6,12 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+import {defaultTo} from 'ramda'
+import { EthereumPairs } from "constants.js"
 
-export default () => {
+const Store = window.require('electron-store')
+
+export default ({update}) => {
     const [open, setOpen] = useState(false)
     const [name, setName] = useState(false)
     const [address, setAddress] = useState(false)
@@ -17,8 +21,11 @@ export default () => {
         setAddress('')
     }
     const confirmAddr = () => {
-        
+        const store = new Store()
+        const ethAddress = defaultTo([], store.get(EthereumPairs))
+        store.set(EthereumPairs, [{name, address}, ...ethAddress])
         setOpen(false)
+        update()
     }
     return <>
     <Button

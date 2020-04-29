@@ -2,7 +2,7 @@ dist/
 main/node_modules/
 main/build/
 main/package-lock.json
-
+config/
 
 render/node_modules/
 render/build/

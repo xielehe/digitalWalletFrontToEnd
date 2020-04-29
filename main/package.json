@@ -4,11 +4,11 @@
   "description": "",
   "main": "build/main.js",
   "scripts": {
-      "start": "electron . ",
-      "build": "node build.js",
-      "pack": "webpack --progress --colors  --mode production",
-      "lint": "eslint \"src/**\" \"main.js\" \"webpack.config.js\"",
-      "listen": "webpack  --mode production --progress --colors --watch "
+    "start": "electron . ",
+    "build": "node build.js",
+    "pack": "webpack --progress --colors  --mode production",
+    "lint": "eslint \"src/**\" \"main.js\" \"webpack.config.js\"",
+    "listen": "webpack  --mode production --progress --colors --watch "
   },
   "keywords": [],
   "author": "",
