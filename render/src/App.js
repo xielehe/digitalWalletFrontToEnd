@@ -8,6 +8,7 @@ import blue from '@material-ui/core/colors/blue'
 
 import Frame from "views/Sidebar"
 import { useInit, InitProvider } from 'context/init'
+import { VetherProvider } from 'context/eth'
 import btcPrice from "btc/price"
 
 const theme = createMuiTheme({
@@ -28,7 +29,9 @@ const App = () => {
             <React.Fragment>
                   <CssBaseline />
                       <SnackbarProvider maxSnack={3} autoHideDuration = {2500} anchorOrigin={{ vertical: 'top', horizontal: 'center', }}>
+                         <VetherProvider>
                         <Frame />
+                        </VetherProvider>
                       </SnackbarProvider>
             </React.Fragment>
       </ThemeProvider>

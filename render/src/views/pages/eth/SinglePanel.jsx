@@ -11,8 +11,9 @@ import SyncIcon from '@material-ui/icons/Sync';
 import { useSnackbar } from 'notistack';
 import BigNumber from 'bignumber.js'
 
-import { path, not, defaultTo } from 'ramda';
+import { not } from 'ramda';
 import getBalance from "eth/balance"
+import Send from "views/pages/eth/Send";
 
 const useStyles = makeStyles(theme =>({
     root: {
@@ -37,14 +38,12 @@ const useStyles = makeStyles(theme =>({
 }));
 const BNOf = n => new BigNumber(n)
 
-export default function OutlinedCard({ ethereum, setPageLoading}) {
+export default function OutlinedCard({ ethereum, setPageLoading, delAddr}) {
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar()
     const [balance, setBalance] = useState(0)
     const [loading, setLoading] = useState(true)
     const [openSend, setOpenSend] = useState(false)
-    const [utxos, setUtxos] = useState(null)
-    const [fees, setFees] = useState({})
     const copyToClipboard = text => {
         navigator.clipboard.writeText(text)
         enqueueSnackbar('copy successful!', { variant: "info", anchorOrigin: { horizontal: 'center', vertical: 'bottom', }, })
@@ -52,15 +51,16 @@ export default function OutlinedCard({ ethereum, setPageLoading}) {
 
 
     useEffect(() => {
-        getBalance(ethereum.address)
+        getBalance(ethereum.address).then(setBalance).then(() =>setLoading(false))
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ethereum])
 
-    const del = addr =>{
-        // if (window.confirm('Are you sure to delete?')) delAddr(addr)
+    const del = addr => {
+        if (window.confirm('Are you sure to delete?')) delAddr(ethereum)
     }
     const refreshAccount = () =>{
-        // if (window.confirm('Are you sure to delete?')) delAddr(addr)
+        setLoading(true)
+        getBalance(ethereum.address).then(setBalance).then(() =>setLoading(false))
     }
 
     return <Grid item xs={6}>
@@ -85,7 +85,7 @@ export default function OutlinedCard({ ethereum, setPageLoading}) {
                 <Typography className={classes.title} color="textSecondary" gutterBottom>Account Balance</Typography>
                 <Typography variant="body2" component="span">{
                 loading ?<CircularProgress size={16} />:
-                BNOf(10).toFixed(5)
+                parseFloat(BNOf(balance).dividedBy('1000000000000000000').toFixed(5).toString() )
             } <span style={{paddingLeft: 10, paddingRight: 5}}>eth</span>
                 <SyncIcon
                 fontSize= 'small'
@@ -112,6 +112,10 @@ export default function OutlinedCard({ ethereum, setPageLoading}) {
                     </Grid>
                 </Grid>
             </CardActions>
+            {openSend ? <Send classes={classes}
+            address={ethereum.address}
+            balance={balance}
+            setPageLoading={setPageLoading} />: ''}
         </Card>
     </Grid>
 }
