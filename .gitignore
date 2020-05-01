@@ -6,6 +6,7 @@ config/
 
 render/node_modules/
 render/build/
+render/package-lock.json
 render/public/manifest.json
 render/robots.txt
 render/yarn.lock
