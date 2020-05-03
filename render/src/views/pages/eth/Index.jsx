@@ -35,7 +35,7 @@ const Store = window.require('electron-store')
 
 export default function CenteredGrid() {
     const [pageLoading, setPageLoading] = useState(false)
-    const [{ ethers }, , setState] = useInit()
+    const [{ ethers }, setState] = useInit()
     const classes = useStyles()
     const deleteAddress = eth => {
         const newEths = ethers.filter(({address}) => address !== eth.address)

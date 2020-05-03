@@ -44,7 +44,7 @@ export default function CenteredGrid() {
         localStorage.setItem('names', JSON.stringify({ ...defaultTo({}, pairs), [addr]: name} ))
         const newAddrs = uniq([...addresses, addr])
         localStorage.setItem('addresses', JSON.stringify(newAddrs))
-        setInit(r => ({ ...r, addresses: newAddrs }))
+        setInit({addresses: newAddrs})
         setOpen1(false)
     }
     const savePair = ({ name, address, encryptPrivateKey }) =>{
@@ -53,7 +53,7 @@ export default function CenteredGrid() {
         localStorage.setItem(address, encryptPrivateKey)
         const newAddrs = uniq([...addresses, address])
         localStorage.setItem('addresses', JSON.stringify(newAddrs))
-        setInit(r => ({ ...r, addresses: newAddrs }))
+        setInit({addresses: newAddrs})
         setOpenKey(false)
     }
     const deleteAddress = addr =>{
@@ -63,9 +63,9 @@ export default function CenteredGrid() {
         const pairs = defaultTo({}, JSON.parse(localStorage.getItem('names'))) 
         localStorage.setItem('names', JSON.stringify(dissoc(addr, pairs)))
 
-        setInit(r => ({ ...r, addresses: newAddrs }))
+        setInit({addresses: newAddrs})
     }
-    
+
     return ( 
         <div className={classes.root}>
             <Backdrop className={classes.backdrop} open={pageLoading}> <CircularProgress color="inherit" /> </Backdrop>

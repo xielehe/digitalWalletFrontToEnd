@@ -23,13 +23,13 @@ function InitProvider(props) {
             ))
             .catch(e=>alert('get price error'))
     }, [])
-    const value = React.useMemo(() => [init, setInit], [init])
+    const value = React.useMemo(() => [init, o => setInit(setIState(o))], [init])
     return <GlobalContext.Provider value={value} {...props} />
 }
 
 function useInit() {
     const context = React.useContext(GlobalContext)
     if (!context) throw new Error('useInit must be used within a InitProvider')
-    return [...context, o => (context[1])(setIState(o))]
+    return context
 }
 export { InitProvider, useInit}
