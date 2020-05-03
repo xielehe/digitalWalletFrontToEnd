@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import {defaultTo} from 'ramda'
+import { uniqBy, prop } from 'ramda'
 import Grid from '@material-ui/core/Grid';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -43,9 +43,12 @@ export default function CenteredGrid() {
         const store = new Store()
         store.set(EthereumPairs, newEths)
     }
-    const refetch = () =>{
+    const refetch = ({ name, address }) =>{
+        const newEths = uniqBy(prop('address'), [{ name, address }, ...ethers])
+        setState({ ethers: newEths})
         const store = new Store()
-        setState({ ethers: defaultTo([], store.get(EthereumPairs))})
+        store.set(EthereumPairs, newEths)
+
     }
     
     return ( <div className = {classes.root} >
@@ -57,7 +60,7 @@ export default function CenteredGrid() {
         <Grid item xs = { 6 }> < ImportAddress update={refetch} / > </Grid>
         </Grid>
         <Grid container spacing={3}>
-            {ethers.map(ethereum => <Pannel setPageLoading={setPageLoading} ethereum={ethereum} delAddr={deleteAddress} />)}
+            {ethers.map(ethereum => <Pannel key={ethereum.address} setPageLoading={setPageLoading} ethereum={ethereum} delAddr={deleteAddress} />)}
         </Grid>
         </div>
     );

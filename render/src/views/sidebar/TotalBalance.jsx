@@ -7,18 +7,19 @@ import { useInit } from 'context/init'
 
 export default function () {
     const [balance, setBalance] = useState(0)
-    const [{ addresses, btcPrice }] = useInit()
+    const [{ btcs, price }] = useInit()
+
     useEffect(() => {
-        utxo(addresses)
+        utxo(btcs.map(prop('address')))
             .then(path(['data', 'addresses']))
             .then(map(prop('balance')))
             .then(values)
             .then(sum)
             .then(setBalance)
-    }, [addresses])
+    }, [btcs])
     
     return <Typography variant="h6" noWrap>
         {(balance / 100000).toFixed(2)} <span style={{ paddingRight: 5, fontSize: 'smaller' }}>mBTC</span>
-        (¥{btcPrice ? (balance * btcPrice / 100000000).toFixed(0) : 0})
+        (¥{price ? (balance * price.btcPrice / 100000000).toFixed(0) : 0})
     </Typography>
 }

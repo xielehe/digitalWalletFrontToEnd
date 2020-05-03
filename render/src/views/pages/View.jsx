@@ -11,7 +11,7 @@ import DialogImportKey from "views/pages/view/ImportKey";
 import Pannel from "views/pages/view/Pannel";
 import Createpiar from "views/pages/Create";
 import { BitcoinPairs } from "constants.js"
-import { without, uniq, defaultTo, dissoc, prop} from 'ramda';
+import { uniqBy, prop} from 'ramda';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -42,7 +42,7 @@ export default function CenteredGrid() {
     const importAddr = () => setOpen1(true)
     const importKey = () => setOpenKey(true)
     const saveAddress = (address, name) =>{
-        const newBtcs = [...btcs, { name, address }]
+        const newBtcs = uniqBy(prop('address'), [{ name, address }, ...btcs])
         setInit({ btcs: newBtcs})
         const store = new Store()
         store.set(BitcoinPairs, newBtcs)
