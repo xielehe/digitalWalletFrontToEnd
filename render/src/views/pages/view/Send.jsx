@@ -14,9 +14,9 @@ import DialogImportWIF from "views/pages/view/ImportWIF";
 
 const BNOf = n => new BigNumber(n)
 
-const toCNY = (amount, init) => '¥' + (BNOf(amount === '' ? 0 : amount).multipliedBy(defaultTo(1, init.btcPrice)).dividedBy(1000).toFixed(2))
+const toCNY = (amount, init) => '¥' + (BNOf(amount === '' ? 0 : amount).multipliedBy(defaultTo(1, init.price.btcPrice)).dividedBy(1000).toFixed(2))
 const toBTC = (amount, init) => 
-    BNOf(amount).multipliedBy(1000).dividedBy(init.btcPrice).toFixed(5)
+    BNOf(amount).multipliedBy(1000).dividedBy(init.price.btcPrice).toFixed(5)
 + '  mBTC'
 
 export default function ({ address, utxos, fees, balance, init, setPageLoading }) {
@@ -35,7 +35,7 @@ export default function ({ address, utxos, fees, balance, init, setPageLoading }
 
     const verify = async () => {
         if (!valiAddress(payTo)) return enqueueSnackbar('Address is invalid.', { variant: "error", })
-        const mbtcAmount = cunit ? amount : BNOf(amount).multipliedBy(1000).dividedBy(init.btcPrice).toFixed(5)
+        const mbtcAmount = cunit ? amount : BNOf(amount).multipliedBy(1000).dividedBy(init.price.btcPrice).toFixed(5)
 
         if (mbtcAmount >= (balance / 100000) || mbtcAmount <= 0) return enqueueSnackbar('Insufficient balance.', { variant: "error", })
         setPageLoading(true)
@@ -47,7 +47,7 @@ export default function ({ address, utxos, fees, balance, init, setPageLoading }
     }
     const send = async ({key, fee, output}) =>{
         setPageLoading(true)
-        const mbtcAmount = cunit ? amount : BNOf(amount).multipliedBy(1000).dividedBy(init.btcPrice).toFixed(5)
+        const mbtcAmount = cunit ? amount : BNOf(amount).multipliedBy(1000).dividedBy(init.price.btcPrice).toFixed(5)
         const res = await sendBTc({ payTo, amount: BNOf(mbtcAmount).multipliedBy(100000), address, wifkey: key, fee, output});
         setPageLoading(false)
         const {err} = res
@@ -79,7 +79,7 @@ export default function ({ address, utxos, fees, balance, init, setPageLoading }
                             <SyncAltIcon style={{ cursor: 'pointer'}} onClick={()=> setCunit(not)} />
                             <span style={{ cursor: 'pointer' }} onClick={() => setAmount(
                                 cunit ? BNOf(maxBalance).dividedBy(100000): 
-                                    (BNOf(maxBalance).multipliedBy(init.btcPrice).dividedBy(100000000).toFixed(4))
+                                    (BNOf(maxBalance).multipliedBy(init.price.btcPrice).dividedBy(100000000).toFixed(4))
                             )} >max</span>
                         </InputAdornment>,
                     }}

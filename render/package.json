@@ -14,7 +14,7 @@
     "bip38": "^3.0.0",
     "bitcoinjs-lib": "^5.1.7",
     "ethereumjs-tx": "^2.1.2",
-    "moment": "^2.24.0",
+    "moment": "^2.25.1",
     "notistack": "^0.9.7",
     "ramda": "^0.27.0",
     "react": "^16.12.0",

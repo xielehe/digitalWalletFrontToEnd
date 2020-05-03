@@ -10,6 +10,7 @@ import ImportAddress from "views/pages/eth/ImportAddress";
 
 import { EthereumPairs } from "constants.js"
 import Pannel from "views/pages/eth/SinglePanel"
+import { useInit } from 'context/init'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -34,19 +35,19 @@ const Store = window.require('electron-store')
 
 export default function CenteredGrid() {
     const [pageLoading, setPageLoading] = useState(false)
-    const [eths, setEths] = useState(defaultTo([], (new Store()).get(EthereumPairs)))
+    const [{ ethers }, , setState] = useInit()
     const classes = useStyles()
     const deleteAddress = eth => {
-        const newEths = eths.filter(({address}) => address !== eth.address)
-        setEths(newEths)
+        const newEths = ethers.filter(({address}) => address !== eth.address)
+        setState({ ethers: newEths})
         const store = new Store()
         store.set(EthereumPairs, newEths)
     }
     const refetch = () =>{
         const store = new Store()
-        setEths(defaultTo([], store.get(EthereumPairs)))
+        setState({ ethers: defaultTo([], store.get(EthereumPairs))})
     }
-
+    
     return ( <div className = {classes.root} >
         <Backdrop className = {classes.backdrop} open = {pageLoading} >
             <CircularProgress color = "inherit" / >
@@ -56,7 +57,7 @@ export default function CenteredGrid() {
         <Grid item xs = { 6 }> < ImportAddress update={refetch} / > </Grid>
         </Grid>
         <Grid container spacing={3}>
-            {eths.map(ethereum => <Pannel setPageLoading={setPageLoading} ethereum={ethereum} delAddr={deleteAddress} />)}
+            {ethers.map(ethereum => <Pannel setPageLoading={setPageLoading} ethereum={ethereum} delAddr={deleteAddress} />)}
         </Grid>
         </div>
     );

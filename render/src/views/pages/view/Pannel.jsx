@@ -101,8 +101,8 @@ export default function OutlinedCard({ address, delAddr, setPageLoading}) {
                 loading ?<CircularProgress size={16} />:
                 BNOf(balance).dividedBy(100000).toFixed(5)
                 } <span style={{paddingLeft: 10, paddingRight: 5}}>mBTC</span> 
-                                (¥{balance && init.btcPrice ? 
-                                BNOf(balance).multipliedBy(init.btcPrice).dividedBy(100000000).toFixed(2)
+                                (¥{balance && init.price.btcPrice ? 
+                                BNOf(balance).multipliedBy(init.price.btcPrice).dividedBy(100000000).toFixed(2)
                 : 0})
                 <SyncIcon 
                 fontSize= 'small'

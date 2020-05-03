@@ -1,5 +1,5 @@
 import 'typeface-roboto'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { SnackbarProvider } from 'notistack'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { ThemeProvider } from '@material-ui/styles'
@@ -7,9 +7,7 @@ import { createMuiTheme } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
 
 import Frame from "views/Sidebar"
-import { useInit, InitProvider } from 'context/init'
-import { VetherProvider } from 'context/eth'
-import btcPrice from "btc/price"
+import { InitProvider } from 'context/init'
 
 const theme = createMuiTheme({
   palette: {
@@ -19,19 +17,12 @@ const theme = createMuiTheme({
 })
 
 const App = () => {
-  const [, setInit] = useInit()
-  useEffect(() => {
-    btcPrice()
-      .then(a => setInit(r => ({ ...r, btcPrice: a })))
-  }, [setInit])
     return (
       <ThemeProvider theme={theme}>
             <React.Fragment>
                   <CssBaseline />
                       <SnackbarProvider maxSnack={3} autoHideDuration = {2500} anchorOrigin={{ vertical: 'top', horizontal: 'center', }}>
-                         <VetherProvider>
                         <Frame />
-                        </VetherProvider>
                       </SnackbarProvider>
             </React.Fragment>
       </ThemeProvider>

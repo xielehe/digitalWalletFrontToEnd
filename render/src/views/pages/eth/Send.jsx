@@ -15,9 +15,9 @@ import DialogSignTx from "views/pages/eth/Sign";
 
 const BNOf = n => new BigNumber(n)
 
-const toCNY = (amount, init) => '¥' + (BNOf(amount === '' ? 0 : amount).multipliedBy(defaultTo(1, init.btcPrice)).dividedBy(1000).toFixed(2))
+const toCNY = (amount, init) => '¥' + (BNOf(amount === '' ? 0 : amount).multipliedBy(defaultTo(1, init.price.btcPrice)).dividedBy(1000).toFixed(2))
 const toBTC = (amount, init) =>
-    BNOf(amount).multipliedBy(1000).dividedBy(init.btcPrice).toFixed(5)
+    BNOf(amount).multipliedBy(1000).dividedBy(init.price.btcPrice).toFixed(5)
 + '  mBTC'
 
 export default function ({ address, utxos, fees, balance, init, setPageLoading }) {
