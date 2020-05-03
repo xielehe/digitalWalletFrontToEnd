@@ -7,7 +7,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { useInit } from 'context/init'
 import DialogImportAddr from "views/pages/view/ImportAddr";
-import DialogImportKey from "views/pages/view/ImportKey";
 import Pannel from "views/pages/view/Pannel";
 import Createpiar from "views/pages/Create";
 import { BitcoinPairs } from "constants.js"
@@ -35,21 +34,16 @@ const Store = window.require('electron-store')
 
 export default function CenteredGrid() {
     const [open1, setOpen1] = useState(false)
-    const [openkey, setOpenKey] = useState(false)
     const [pageLoading, setPageLoading] = useState(false)
     const [{ btcs }, setInit] = useInit()
     const classes = useStyles()
     const importAddr = () => setOpen1(true)
-    const importKey = () => setOpenKey(true)
     const saveAddress = (address, name) =>{
         const newBtcs = uniqBy(prop('address'), [{ name, address }, ...btcs])
         setInit({ btcs: newBtcs})
         const store = new Store()
         store.set(BitcoinPairs, newBtcs)
         setOpen1(false)
-    }
-    const savePair = ({ name, address, encryptPrivateKey }) =>{
-        setOpenKey(false)
     }
     const deleteAddress = addr =>{
         const newBtcs = btcs.filter(({ address }) => address !== addr)
@@ -62,13 +56,11 @@ export default function CenteredGrid() {
         <div className={classes.root}>
             <Backdrop className={classes.backdrop} open={pageLoading}> <CircularProgress color="inherit" /> </Backdrop>
             <DialogImportAddr open={open1} setOpen={setOpen1} saveAddr={saveAddress}/>
-            <DialogImportKey open={openkey} setOpen={setOpenKey} savePair={savePair} />
-
             <Grid container spacing={3} className={classes.btn}>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                     <Createpiar />
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                     <Button
                         variant="outlined"
                         onClick={importAddr}
@@ -76,16 +68,6 @@ export default function CenteredGrid() {
                         disableFocusRipple 
                         fullWidth >
                             import address
-                    </Button>
-                </Grid>
-                <Grid item xs={4}>
-                    <Button
-                        variant="outlined"
-                        onClick={importKey}
-                        size='large'
-                        disableFocusRipple 
-                        fullWidth >
-                            import Private Key
                     </Button>
                 </Grid>
             </Grid>

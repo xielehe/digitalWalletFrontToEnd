@@ -9,11 +9,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
 import { defaultTo } from 'ramda';
 import { useEffect } from 'react';
-import { useSnackbar } from 'notistack';
 import Slider from '@material-ui/core/Slider';
 import BigNumber from 'bignumber.js'
-
-import decryptedKey from "btc/decryptedKey";
 
 const marks = [
     {
@@ -32,18 +29,13 @@ const marks = [
 const BNOf = n => new BigNumber(n)
 
 
-export default function FormDialog({ open, setOpen, init, callback, address}) {
+export default function FormDialog({ open, setOpen, init, callback}) {
     const [k, setk] = useState('')
     const [currentFee, setCurrentFee] = useState(defaultTo({}, open).fee)
-    const [encryptKey, setEncryptKey] = useState(null)
-    const { enqueueSnackbar } = useSnackbar()
     const handleClose = () => {
         setOpen(false)
         setk(null)
     }
-    useEffect(() => { 
-        setEncryptKey(localStorage.getItem(address))
-    }, [address])
     useEffect(() => { 
         setCurrentFee(defaultTo({}, open).fee)
     }, [open])
@@ -64,65 +56,15 @@ export default function FormDialog({ open, setOpen, init, callback, address}) {
         setk(null)
         callback({ key, fee: currentFee, output})
     }
-    const confirm2 = ()=>{
-        const key = decryptedKey({ key: encryptKey, pass: k})
-        if (key.err) return enqueueSnackbar('Invalid pass!', { variant: "error" })
-        const {output} = open
-        setOpen(false)
-        setk(null)
-        callback({ key, fee: currentFee, output})
-    }
 
-    return encryptKey ? 
-        <Dialog open={open !== false} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Password</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                    Please enter your Password here.fee: {open ?
-                        (defaultTo(0)(open.fee))
-                        : ' '} ({open ? '¥' + 
-                    (defaultTo(0)(open.fee * defaultTo({}, init).btcPrice / 100000000)).toFixed(2)
-                    : ''}）
-          </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Pass"
-                        type='password'
-                        onChange={event=>setk(event.target.value)}
-                        fullWidth
-                    />
-                <Typography id="discrete-slider-custom" style={{ marginTop: 20 }} gutterBottom>
-                    fees
-                </Typography>
-                <Slider
-                    defaultValue={100}
-                    aria-labelledby="discrete-slider-custom"
-                    step={50}
-                    onChange={changeFee}
-                    getAriaValueText={id => id}
-                    valueLabelDisplay="off"
-                    marks={marks}
-                />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Cancel
-          </Button>
-                    <Button onClick={confirm2} color="primary">
-                        Confirm
-          </Button>
-                </DialogActions>
-            </Dialog>
-            :
-        <Dialog open={open !== false} aria-labelledby="form-dialog-title">
+    return <Dialog open={open !== false} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">KEY</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     Please enter your key here.fee: {open ?
                         (defaultTo(0)(currentFee))
                         : ' '} ({open ? '¥' +
-                        (defaultTo(0)(currentFee * defaultTo({}, init).btcPrice / 100000000)).toFixed(2)
+                        (defaultTo(0)(currentFee * defaultTo({}, init).price.btcPrice / 100000000)).toFixed(2)
                             : ''}）
           </DialogContentText>
                 <TextField
