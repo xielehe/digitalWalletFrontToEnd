@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme =>({
 }));
 const BNOf = n => new BigNumber(n)
 
-export default function OutlinedCard({ address, delAddr, setPageLoading}) {
+export default function OutlinedCard({ delAddr, btc, setPageLoading}) {
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar()
     const [init] = useInit()
@@ -49,6 +49,7 @@ export default function OutlinedCard({ address, delAddr, setPageLoading}) {
     const [openSend, setOpenSend] = useState(false)
     const [utxos, setUtxos] = useState(null)
     const [fees, setFees] = useState({})
+    const {address} = btc
     const copyToClipboard = text => {
         navigator.clipboard.writeText(text)
         enqueueSnackbar('copy successful!', { variant: "info", anchorOrigin: { horizontal: 'center', vertical: 'bottom', }, })
@@ -74,15 +75,13 @@ export default function OutlinedCard({ address, delAddr, setPageLoading}) {
     const del = addr =>{
         if (window.confirm('Are you sure to delete?')) delAddr(addr)
     }
-    
-    const pairs = defaultTo({}, JSON.parse(localStorage.getItem('names')))
 
     return <Grid item xs={6}>
         <Card className={classes.root} variant="outlined">
             <CardContent>
                 <div className={classes.list}>
                     <Typography variant="body2" component="span" color="textSecondary" gutterBottom>Name</Typography>
-                    <span style={{ float: 'right', }}>{pairs[address]} </span>
+                    <span style={{ float: 'right', }}>{btc.name} </span>
                 </div>
 
                 <div className={classes.list}>

@@ -10,7 +10,8 @@ import DialogImportAddr from "views/pages/view/ImportAddr";
 import DialogImportKey from "views/pages/view/ImportKey";
 import Pannel from "views/pages/view/Pannel";
 import Createpiar from "views/pages/Create";
-import { without, uniq, defaultTo, dissoc} from 'ramda';
+import { BitcoinPairs } from "constants.js"
+import { without, uniq, defaultTo, dissoc, prop} from 'ramda';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -30,40 +31,31 @@ const useStyles = makeStyles(theme => ({
         color: '#fff',
     },
 }));
+const Store = window.require('electron-store')
 
 export default function CenteredGrid() {
     const [open1, setOpen1] = useState(false)
     const [openkey, setOpenKey] = useState(false)
     const [pageLoading, setPageLoading] = useState(false)
-    const [{ addresses }, setInit] = useInit()
+    const [{ btcs }, setInit] = useInit()
     const classes = useStyles()
     const importAddr = () => setOpen1(true)
     const importKey = () => setOpenKey(true)
-    const saveAddress = (addr, name) =>{
-        const pairs = JSON.parse(localStorage.getItem('names'))
-        localStorage.setItem('names', JSON.stringify({ ...defaultTo({}, pairs), [addr]: name} ))
-        const newAddrs = uniq([...addresses, addr])
-        localStorage.setItem('addresses', JSON.stringify(newAddrs))
-        setInit({addresses: newAddrs})
+    const saveAddress = (address, name) =>{
+        const newBtcs = [...btcs, { name, address }]
+        setInit({ btcs: newBtcs})
+        const store = new Store()
+        store.set(BitcoinPairs, newBtcs)
         setOpen1(false)
     }
     const savePair = ({ name, address, encryptPrivateKey }) =>{
-        const pairs = JSON.parse(localStorage.getItem('names'))
-        localStorage.setItem('names', JSON.stringify({ ...defaultTo({}, pairs), [address]: name} ))
-        localStorage.setItem(address, encryptPrivateKey)
-        const newAddrs = uniq([...addresses, address])
-        localStorage.setItem('addresses', JSON.stringify(newAddrs))
-        setInit({addresses: newAddrs})
         setOpenKey(false)
     }
     const deleteAddress = addr =>{
-        const newAddrs = without([addr], addresses)
-        localStorage.setItem('addresses', JSON.stringify(newAddrs))
-        localStorage.removeItem(addr)
-        const pairs = defaultTo({}, JSON.parse(localStorage.getItem('names'))) 
-        localStorage.setItem('names', JSON.stringify(dissoc(addr, pairs)))
-
-        setInit({addresses: newAddrs})
+        const newBtcs = btcs.filter(({ address }) => address !== addr)
+        setInit({ btcs: newBtcs })
+        const store = new Store()
+        store.set(BitcoinPairs, newBtcs)
     }
 
     return ( 
@@ -98,7 +90,11 @@ export default function CenteredGrid() {
                 </Grid>
             </Grid>
             <Grid container spacing={3}>
-                {addresses.map(address => <Pannel setPageLoading={setPageLoading} key={address} address={address} delAddr={deleteAddress} />)}
+                {btcs.map(btc => <Pannel 
+                setPageLoading={setPageLoading} 
+                btc={btc} 
+                key={btc.address} 
+                delAddr={deleteAddress} />)}
             </Grid>
         </div>
     );

@@ -1,7 +1,7 @@
 import React from 'react'
 import { defaultTo, path} from 'ramda'
 
-import { EthereumPairs } from "constants.js"
+import { EthereumPairs, BitcoinPairs } from "constants.js"
 import getPrices from "fun/price"
 import setIState from "fun/setIState";
 
@@ -10,7 +10,7 @@ const GlobalContext = React.createContext()
 
 function InitProvider(props) {
     const [init, setInit] = React.useState({ 
-        addresses: defaultTo([], JSON.parse(localStorage.getItem('addresses'))),
+        btcs: defaultTo([], (new Store()).get(BitcoinPairs)),
         ethers: defaultTo([], (new Store()).get(EthereumPairs)),
     })
     React.useEffect(() => {
