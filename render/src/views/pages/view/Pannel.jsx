@@ -14,7 +14,7 @@ import BigNumber from 'bignumber.js'
 import { useInit } from 'context/init'
 import utxo from "btc/utxo";
 import getFees from "btc/fees";
-import { path, not, defaultTo } from 'ramda';
+import { path, not } from 'ramda';
 import Send from "views/pages/view/Send";
 
 const useStyles = makeStyles(theme =>({

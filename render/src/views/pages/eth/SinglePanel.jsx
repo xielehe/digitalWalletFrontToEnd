@@ -14,6 +14,7 @@ import BigNumber from 'bignumber.js'
 import { not } from 'ramda';
 import getBalance from "eth/balance"
 import Send from "views/pages/eth/Send";
+import { useInit } from 'context/init'
 
 const useStyles = makeStyles(theme =>({
     root: {
@@ -44,6 +45,7 @@ export default function OutlinedCard({ ethereum, setPageLoading, delAddr}) {
     const [balance, setBalance] = useState(0)
     const [loading, setLoading] = useState(true)
     const [openSend, setOpenSend] = useState(false)
+    const [{price}] = useInit()
     const copyToClipboard = text => {
         navigator.clipboard.writeText(text)
         enqueueSnackbar('copy successful!', { variant: "info", anchorOrigin: { horizontal: 'center', vertical: 'bottom', }, })
@@ -87,6 +89,11 @@ export default function OutlinedCard({ ethereum, setPageLoading, delAddr}) {
                 loading ?<CircularProgress size={16} />:
                 parseFloat(BNOf(balance).dividedBy('1000000000000000000').toFixed(5).toString() )
             } <span style={{paddingLeft: 10, paddingRight: 5}}>eth</span>
+                (¥{balance && price && price.ethPrice ?
+                            BNOf(balance)
+                            .dividedBy('1000000000000000000')
+                            .multipliedBy(price.ethPrice).toFixed(2)
+                            : 0})
                 <SyncIcon
                 fontSize= 'small'
                 onClick={refreshAccount}
@@ -115,6 +122,7 @@ export default function OutlinedCard({ ethereum, setPageLoading, delAddr}) {
             {openSend ? <Send classes={classes}
             address={ethereum.address}
             balance={balance}
+            price={price}
             setPageLoading={setPageLoading} />: ''}
         </Card>
     </Grid>

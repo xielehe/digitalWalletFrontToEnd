@@ -14,7 +14,7 @@ import { useSnackbar } from 'notistack';
 import signTX  from "eth/signTX"
 const BNOf = n => new BigNumber(n)
 
-export default function FormDialog({ open, setOpen, init, callback, address}) {
+export default function FormDialog({ open, setOpen, price, callback}) {
     const [k, setk] = useState('')
     const [currentFee, setCurrentFee] = useState(defaultTo({}, open).transactionFee)
     const [rawHex, setRawHex] = useState(null)
@@ -52,9 +52,12 @@ export default function FormDialog({ open, setOpen, init, callback, address}) {
                 <DialogContentText>
                     {open ?
                         (defaultTo(0)(
-                            parseFloat(BNOf(currentFee).dividedBy('1000000000000000000').toFixed(8).toString() )
+                            BNOf(currentFee).dividedBy('1000000000000000000').toFixed()
                         ))
-                        : ' '}
+                        : ' '}ETH
+                        {`  (¥${BNOf(currentFee).dividedBy('1000000000000000000')
+                        .multipliedBy(price.ethPrice).toFixed(2)
+                    })`}
           </DialogContentText>
                 <TextField
                     autoFocus

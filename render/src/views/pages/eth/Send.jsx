@@ -2,37 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { CardContent, TextField, InputAdornment, Button } from '@material-ui/core'
 
 import BigNumber from 'bignumber.js'
-import SyncAltIcon from '@material-ui/icons/SyncAlt';
-
 
 import isAddress  from "eth/isAddress"
 import buildTX from "eth/buildTX"
 import broadcastTX from "eth/broadcastTX"
 
-import { path, defaultTo, not } from 'ramda';
+import { path, defaultTo } from 'ramda';
 import { useSnackbar } from 'notistack';
-import DialogSignTx from "views/pages/eth/Sign";
+import DialogSignTx from "views/pages/eth/Sign"
 
 const BNOf = n => new BigNumber(n)
 
-const toCNY = (amount, init) => '¥' + (BNOf(amount === '' ? 0 : amount).multipliedBy(defaultTo(1, init.price.btcPrice)).dividedBy(1000).toFixed(2))
-const toBTC = (amount, init) =>
-    BNOf(amount).multipliedBy(1000).dividedBy(init.price.btcPrice).toFixed(5)
-+ '  mBTC'
-
-export default function ({ address, utxos, fees, balance, init, setPageLoading }) {
+export default function ({ address, balance, price, setPageLoading }) {
     const [payTo, setPayTo] = useState('')
     const [amount, setAmount] = useState('')
     const [txh, setTxh] = useState(null)
     const [open, setOpen] = useState(false)
-    const [cunit, setCunit] = useState(true)
     const [maxBalance, setMax] = useState(0)
     const { enqueueSnackbar } = useSnackbar()
 
     useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [address])
-
+    const toCNY = () =>{
+        return amount ? BNOf(amount)
+        .multipliedBy(defaultTo(1, path(['ethPrice'], price)))
+            .toFixed(2): 0
+    }
     const verify = async () => {
         if (!isAddress(payTo)) return enqueueSnackbar('Address is invalid.', { variant: "error", })
         const ethAmount = amount
@@ -68,10 +64,11 @@ export default function ({ address, utxos, fees, balance, init, setPageLoading }
                     margin="normal"
                     required
                     fullWidth
-                    label={`Amount${cunit ? '(ETH)': '(CNY)'}`}
+                    label={'Amount(ETH)'}
                     type='number'
                     onChange={event => setAmount(event.target.value)}
                     value={amount}
+                    helperText={`¥ ${toCNY()}`}
                 />
             {txh ?
                 <TextField
@@ -93,6 +90,6 @@ export default function ({ address, utxos, fees, balance, init, setPageLoading }
                     Send
                     </Button>
                 </div>
-                <DialogSignTx open={open} address={address} setOpen={setOpen} callback={signAndSend} />
+        <DialogSignTx open={open} price={price} address={address} setOpen={setOpen} callback={signAndSend} />
         </CardContent>
     }
