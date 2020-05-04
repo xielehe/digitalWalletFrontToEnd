@@ -22,13 +22,14 @@ export default function ({ address, balance, price, setPageLoading }) {
     const { enqueueSnackbar } = useSnackbar()
 
     useEffect(() => {
-        buildTX({ address, to: address, value: '0' })
+        buildTX({ address, to: address, value: '10' })
         .then(prop('transactionFee'))
         .then(fee =>{
             setMax(BNOf(balance)
             .minus(fee)
+            .minus(10)
             .dividedBy('1000000000000000000')
-            .toFixed(9)
+            .toFixed()
             )
         })
     }, [balance, address])
@@ -51,12 +52,19 @@ export default function ({ address, balance, price, setPageLoading }) {
     }
     const signAndSend = async raw =>{
         setPageLoading(true)
-        const res = await broadcastTX(raw)
-        setPageLoading(false)
-        const {err} = res
-        if (err) return enqueueSnackbar(res.msg, { variant: "error", })
-        setTxh(path(['transactionHash'], res))
-        enqueueSnackbar('broadcast successful!', { variant: "success", })
+        try {
+            const res = await broadcastTX(raw)
+            setPageLoading(false)
+            const { err } = res
+            if (err) return enqueueSnackbar(res.msg, { variant: "error", })
+            setTxh(path(['transactionHash'], res))
+            enqueueSnackbar('broadcast successful!', { variant: "success", })
+        } catch (error) {
+            setPageLoading(false)
+            console.log(error);
+            
+            return enqueueSnackbar(error.message, { variant: "error", })
+        }
     }
     return <CardContent>
                 <TextField

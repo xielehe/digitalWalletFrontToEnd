@@ -21,7 +21,7 @@ const App = () => {
       <ThemeProvider theme={theme}>
             <React.Fragment>
                   <CssBaseline />
-                      <SnackbarProvider maxSnack={3} autoHideDuration = {2500} anchorOrigin={{ vertical: 'top', horizontal: 'center', }}>
+                      <SnackbarProvider maxSnack={3} autoHideDuration = {3500} anchorOrigin={{ vertical: 'top', horizontal: 'center', }}>
                         <Frame />
                       </SnackbarProvider>
             </React.Fragment>
