@@ -7,7 +7,7 @@ import isAddress  from "eth/isAddress"
 import buildTX from "eth/buildTX"
 import broadcastTX from "eth/broadcastTX"
 
-import { path, defaultTo } from 'ramda';
+import { path, defaultTo, prop } from 'ramda';
 import { useSnackbar } from 'notistack';
 import DialogSignTx from "views/pages/eth/Sign"
 
@@ -22,8 +22,16 @@ export default function ({ address, balance, price, setPageLoading }) {
     const { enqueueSnackbar } = useSnackbar()
 
     useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [address])
+        buildTX({ address, to: address, value: '0' })
+        .then(prop('transactionFee'))
+        .then(fee =>{
+            setMax(BNOf(balance)
+            .minus(fee)
+            .dividedBy('1000000000000000000')
+            .toFixed(9)
+            )
+        })
+    }, [balance])
     const toCNY = () =>{
         return amount ? BNOf(amount)
         .multipliedBy(defaultTo(1, path(['ethPrice'], price)))
@@ -68,6 +76,12 @@ export default function ({ address, balance, price, setPageLoading }) {
                     type='number'
                     onChange={event => setAmount(event.target.value)}
                     value={amount}
+                    InputProps={{
+                        endAdornment: <InputAdornment position="end">
+                            <span style={{ cursor: 'pointer' }} 
+                            onClick={() => setAmount(maxBalance)} >max</span>
+                        </InputAdornment>,
+                    }}
                     helperText={`¥ ${toCNY()}`}
                 />
             {txh ?
