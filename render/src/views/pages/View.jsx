@@ -72,7 +72,7 @@ export default function CenteredGrid() {
                 </Grid>
             </Grid>
             <Grid container spacing={3}>
-                {btcs.map(btc => <Pannel 
+                {btcs && btcs.map(btc => <Pannel 
                 setPageLoading={setPageLoading} 
                 btc={btc} 
                 key={btc.address} 

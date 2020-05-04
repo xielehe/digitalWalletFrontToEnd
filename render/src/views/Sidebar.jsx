@@ -19,6 +19,7 @@ import blue from '@material-ui/core/colors/blue';
 
 import sideList from "views/sidebar/data";
 import TotalBalance from "views/sidebar/TotalBalance";
+import EthBalance from "views/sidebar/EthBalance";
 const drawerWidth = 200;
 
 const useStyles = makeStyles(theme => ({
@@ -95,7 +96,7 @@ export default function MiniDrawer() {
   const handleDrawerOpen = () => { setOpen(true); };
   const handleDrawerClose = () => { setOpen(false); };
   const MainContent = sideList.find(({id}) => id === cursor).page
-
+  
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={clsx(classes.appBar, { [classes.appBarShift]: open, })} >
@@ -112,7 +113,7 @@ export default function MiniDrawer() {
           <Typography variant="h6" noWrap className={classes.title}>
             Wallet
           </Typography>
-          <TotalBalance />
+          {cursor === 'btc' ? <TotalBalance /> : <EthBalance />}
         </Toolbar>
       </AppBar>
       <Drawer

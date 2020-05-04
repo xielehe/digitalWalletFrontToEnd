@@ -31,7 +31,7 @@ export default function ({ address, balance, price, setPageLoading }) {
             .toFixed(9)
             )
         })
-    }, [balance])
+    }, [balance, address])
     const toCNY = () =>{
         return amount ? BNOf(amount)
         .multipliedBy(defaultTo(1, path(['ethPrice'], price)))
