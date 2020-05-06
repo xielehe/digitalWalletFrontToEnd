@@ -27,7 +27,6 @@ export default function ({ address, balance, price, setPageLoading }) {
         .then(fee =>{
             setMax(BNOf(balance)
             .minus(fee)
-            .minus(10)
             .dividedBy('1000000000000000000')
             .toFixed()
             )
@@ -62,7 +61,7 @@ export default function ({ address, balance, price, setPageLoading }) {
         } catch (error) {
             setPageLoading(false)
             console.log(error);
-            
+
             return enqueueSnackbar(error.message, { variant: "error", })
         }
     }
@@ -86,7 +85,7 @@ export default function ({ address, balance, price, setPageLoading }) {
                     value={amount}
                     InputProps={{
                         endAdornment: <InputAdornment position="end">
-                            <span style={{ cursor: 'pointer' }} 
+                            <span style={{ cursor: 'pointer' }}
                             onClick={() => setAmount(maxBalance)} >max</span>
                         </InputAdornment>,
                     }}

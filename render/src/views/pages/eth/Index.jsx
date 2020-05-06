@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { uniqBy, prop } from 'ramda'
+import { uniqBy, defaultTo, prop } from 'ramda'
 import Grid from '@material-ui/core/Grid';
 import Backdrop from '@material-ui/core/Backdrop';
 import Typography from '@material-ui/core/Typography';
@@ -45,7 +45,7 @@ const Store = window.require('electron-store')
 export default function CenteredGrid() {
     const [pageLoading, setPageLoading] = useState(false)
     const [gasP, setGas] = useState(0)
-    const [{ ethers }, setState] = useInit()
+    const [{ ethers, price }, setState] = useInit()
     const classes = useStyles()
     const deleteAddress = eth => {
         const newEths = ethers.filter(({address}) => address !== eth.address)
@@ -63,7 +63,7 @@ export default function CenteredGrid() {
         store.set(EthereumPairs, newEths)
 
     }
-    
+console.log(price);
     return ( <div className = {classes.root} >
         <Backdrop className = {classes.backdrop} open = {pageLoading} >
             <CircularProgress color = "inherit" / >
@@ -76,11 +76,17 @@ export default function CenteredGrid() {
             {ethers.map(ethereum => <Pannel key={ethereum.address} setPageLoading={setPageLoading} ethereum={ethereum} delAddr={deleteAddress} />)}
         </Grid>
         <Grid container spacing={3} className={classes.btn} >
-            <Grid item xs={6}> </Grid>
-            <Grid item xs={6}>
-                <Typography className={classes.foot} color="textSecondary" gutterBottom>gas price: {
+            <Grid item xs={3}> </Grid>
+            <Grid item xs={3}> </Grid>
+            <Grid item xs={3}>
+                <Typography className={classes.foot} color="textSecondary" >ETH price: {
+                    BNOf(defaultTo(0, prop('ethPrice', price))).toFixed(2)
+                } ￥/e</Typography>
+            </Grid>
+            <Grid item xs={3}>
+                <Typography className={classes.foot} color="textSecondary" >gas price: {
                     BNOf(gasP)
-                        .dividedBy('1000000000').toFixed()
+                        .dividedBy('1000000000').toFixed(4)
                 } Gwei</Typography>
             </Grid>
         </Grid>
