@@ -4,6 +4,8 @@ win:
 mac:
    icon: build/ico/icon.png
    category: public.app-category.utilities
+nsis:
+   deleteAppDataOnUninstall: true
 appId: com.yue_lianddd_dfgf_czczc_chou_jiang.app
 asar: true
 directories:
