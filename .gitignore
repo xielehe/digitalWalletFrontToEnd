@@ -11,3 +11,4 @@ render/public/manifest.json
 render/robots.txt
 render/yarn.lock
 render/.DS_Store
+.DS_Store
